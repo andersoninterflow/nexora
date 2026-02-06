@@ -1,0 +1,25 @@
+Guia de Implantação, Desenvolvimento e Publicação do Ecossistema NEXORA
+
+1. Pré-requisitos: instale Node.js (>= 18), pnpm e Docker em sua máquina.
+2. Clone o repositório localmente e acesse a pasta:
+   git clone https://github.com/andersoninterflow/nexora.git && cd nexora
+3. Instale todas as dependências do monorepo:
+   pnpm install
+4. Copie o arquivo .env.example para .env e preencha as variáveis de ambiente (como chaves JWT e URL do banco). Nunca comite segredos no Git.
+5. Suba os serviços de infraestrutura (PostgreSQL e Redis) e a API com Docker:
+   docker-compose up --build
+6. Execute as migrações e crie um usuário administrador:
+   pnpm --filter @nexora/api prisma migrate deploy
+   pnpm --filter @nexora/api prisma db seed
+7. Rode os testes automatizados para garantir que a aplicação esteja íntegra:
+   pnpm test
+8. Acesse a API em http://localhost:3000/v1/health para verificar a rota de saúde. Consulte a documentação em http://localhost:3000/docs.
+9. Inicie o frontend administrativo: ele será iniciado automaticamente pelo Docker na porta 3001 (acesse http://localhost:3001).
+10. Quando estiver satisfeito com as alterações, inicie um repositório Git local, faça o commit e suba para o GitHub:
+    git init && git add . && git commit -m "chore: initial commit" && git branch -M main
+    git remote add origin https://github.com/andersoninterflow/nexora.git
+    git push -u origin main
+    Observação: você pode também arrastar os arquivos via interface Web do GitHub. Confirme sempre antes de publicar, pois a ação é irreversível.
+11. Após publicar, configure o GitHub Actions (já definido em .github/workflows/ci.yml) para rodar testes e lint automaticamente a cada push.
+
+Este guia cobre os passos básicos para implantar, desenvolver e publicar o Ecossistema NEXORA.
