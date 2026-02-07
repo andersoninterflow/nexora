@@ -1,48 +1,49 @@
-version: '3.8'
-
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:16-alpine
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: nexora
+      POSTGRES_PASSWORD: nexora
       POSTGRES_DB: nexora
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - nexora_db:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
     ports:
-      - '6379:6379'
+      - "6379:6379"
 
   api:
     build:
-      context: ./apps/api
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    ports:
-      - '3000:3000'
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      PORT: 3000
+      HOST: 0.0.0.0
+      CORS_ORIGIN: http://localhost:3001
+      JWT_SECRET: dev-secret-change-me
+      DATABASE_URL: postgres://nexora:nexora@db:5432/nexora?schema=public
+      SEED_ADMIN_EMAIL: admin@nexora.local
+      SEED_ADMIN_PASSWORD: admin123
     depends_on:
       - db
       - redis
-    volumes:
-      - ./apps/api:/app
+    ports:
+      - "3000:3000"
+    command: sh -c "pnpm exec prisma db push && pnpm exec tsx prisma/seed.ts && pnpm dev"
 
   web:
     build:
-      context: ./apps/web
-      dockerfile: Dockerfile
-    env_file:
-      - .env
-    ports:
-      - '3001:3000'
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      NEXT_PUBLIC_API_BASE: http://localhost:3000
     depends_on:
       - api
-    volumes:
-      - ./apps/web:/app
+    ports:
+      - "3001:3001"
 
 volumes:
-  db_data:
+  nexora_db:

@@ -1,22 +1,14 @@
 {
-  "name": "nexora-ecosystem",
-  "version": "0.1.0",
+  "name": "ecossistema-nexora",
   "private": true,
-  "description": "Monorepo do Ecossistema Digital NEXORA",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "packageManager": "pnpm@9.0.0",
+  "engines": { "node": ">=18" },
   "scripts": {
-    "dev": "pnpm -r dev",
+    "dev": "pnpm -r --parallel dev",
     "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
     "test": "pnpm -r test",
-    "lint": "pnpm -r lint"
-  },
-  "devDependencies": {
-    "eslint": "^8.52.0",
-    "prettier": "^3.0.0",
-    "husky": "^8.0.0",
-    "lint-staged": "^13.0.0"
+    "format": "pnpm -r format",
+    "typecheck": "pnpm -r typecheck"
   }
 }
