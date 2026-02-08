@@ -1,14 +1,8 @@
 {
-  "name": "ecossistema-nexora",
+  "name": "nexora-monorepo",
   "private": true,
-  "packageManager": "pnpm@9.0.0",
-  "engines": { "node": ">=18" },
-  "scripts": {
-    "dev": "pnpm -r --parallel dev",
-    "build": "pnpm -r build",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
-    "format": "pnpm -r format",
-    "typecheck": "pnpm -r typecheck"
-  }
+  "version": "10.0.0",
+  "workspaces": [
+    "frontend"
+  ]
 }
